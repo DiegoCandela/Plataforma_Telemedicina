@@ -96,50 +96,5 @@ Se utilizará el patrón Singleton para garantizar una única instancia comparti
 
 Esto asegura control centralizado y uso eficiente de recursos.
 
----
-
-### 5️. Strategy
-
-El patrón Strategy permitirá definir diferentes comportamientos para los distintos tipos de consulta médica:
-
-- Consulta General.
-- Consulta con Especialista.
-- Consulta de Emergencia.
-
-Cada estrategia podrá tener reglas, costos y niveles de prioridad diferentes sin alterar la estructura principal del sistema.
-
----
-
-### 6️. Observer
-
-Este patrón será utilizado para gestionar notificaciones automáticas dentro del sistema.
-
-Por ejemplo:
-
-- Cuando se genera una prescripción médica, se notifica al paciente y a la farmacia.
-- Cuando se genera una orden de laboratorio, se notifica al laboratorio correspondiente.
-
-Esto permite desacoplar los eventos del sistema de los componentes que reaccionan ante ellos.
-
----
-
-### 7️. Adapter
-
-El patrón Adapter permitirá integrar sistemas externos como laboratorios y farmacias, unificando sus diferentes interfaces bajo una estructura común dentro de la plataforma.
-
-De esta manera, el sistema interno no dependerá directamente de las implementaciones externas.
-
----
-
-### 8️. Facade
-
-Se implementará una clase fachada que simplifique la interacción con los diferentes módulos del sistema.
-
-Por ejemplo, una clase `TelemedicinaFacade` podrá centralizar operaciones como:
-
-- Agendar una consulta.
-- Emitir una prescripción.
-- Generar una orden médica.
-
-Esto reduce la complejidad y mejora la organización del código.
+ad y mejora la organización del código.
 
