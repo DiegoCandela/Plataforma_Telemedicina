@@ -14,6 +14,10 @@ public class PacienteService {
     private final PacienteRepository pacienteRepository;
 
     public Paciente guardar(Paciente paciente) {
+        if (paciente == null) {
+            throw new IllegalArgumentException("Paciente no puede ser null");
+        }
+
         return pacienteRepository.save(paciente);
     }
 

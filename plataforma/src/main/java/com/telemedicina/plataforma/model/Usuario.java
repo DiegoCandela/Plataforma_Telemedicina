@@ -11,6 +11,7 @@ public abstract class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
+    private String tipo;
     protected String nombre;
     protected String correo;
 }
