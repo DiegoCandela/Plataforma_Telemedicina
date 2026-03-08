@@ -20,26 +20,24 @@ public class UsuarioService {
 
         if (tipo.equalsIgnoreCase("PACIENTE")) {
             factory = new PacienteFactory();
-            Usuario usuario = factory.crearUsuario(nombre, correo);
-            Paciente paciente = (Paciente) usuario;
-
-            if (paciente == null) {
-                throw new IllegalArgumentException("Paciente no puede ser null");
-            }
-
-            return pacienteRepository.save(paciente);
-        }
-
-        if (tipo.equalsIgnoreCase("MEDICO")) {
+        } 
+        else if (tipo.equalsIgnoreCase("MEDICO")) {
             factory = new MedicoFactory();
-            Usuario usuario = factory.crearUsuario(nombre, correo);
-            Medico medico = (Medico) usuario;
-            if (medico == null) {
-                throw new IllegalArgumentException("Medico no puede ser null");
-            }
-            return medicoRepository.save(medico);
+        } 
+        else {
+            throw new IllegalArgumentException("Tipo de usuario inválido");
         }
 
-        throw new IllegalArgumentException("Tipo de usuario no válido");
+        Usuario usuario = factory.crearUsuario(nombre, correo);
+
+        if (usuario instanceof Paciente) {
+            return pacienteRepository.save((Paciente) usuario);
+        }
+
+        if (usuario instanceof Medico) {
+            return medicoRepository.save((Medico) usuario);
+        }
+
+        throw new IllegalArgumentException("Tipo de usuario inválido");
     }
 }

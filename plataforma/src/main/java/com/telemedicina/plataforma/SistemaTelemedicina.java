@@ -1,4 +1,4 @@
-package com.telemedicina.plataforma.config;
+package com.telemedicina.plataforma;
 
 public class SistemaTelemedicina {
 
