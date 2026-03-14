@@ -1,5 +1,6 @@
 package com.telemedicina.plataforma.factory;
 
+import com.telemedicina.plataforma.builder.ConsultaBuilder;
 import com.telemedicina.plataforma.model.*;
 
 import java.time.LocalDateTime;
@@ -9,13 +10,12 @@ public class MedicoMedicalFactory implements AbstractMedicalFactory {
     @Override
     public Consulta crearConsulta(Paciente paciente, Medico medico) {
 
-        Consulta consulta = new Consulta();
-        consulta.setPaciente(paciente);
-        consulta.setMedico(medico);
-        consulta.setEstado("ACTIVA");
-        consulta.setFecha(LocalDateTime.now());
-
-        return consulta;
+        return ConsultaBuilder.builder()
+                .paciente(paciente)
+                .medico(medico)
+                .estado("ACTIVA")
+                .fecha(LocalDateTime.now())
+                .build();
     }
 
     @Override
