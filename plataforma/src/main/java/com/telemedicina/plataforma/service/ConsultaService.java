@@ -69,4 +69,17 @@ public class ConsultaService {
 
     return ordenMedicaRepository.save(orden);
 }
+
+public Consulta clonarConsulta(Long consultaId) {
+
+Consulta original = consultaRepository.findById(consultaId)
+        .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
+
+Consulta copia = original.clone();
+
+copia.setFecha(original.getFecha().plusDays(1));
+copia.setEstado("ACTIVA");
+
+return consultaRepository.save(copia);
+}
 }

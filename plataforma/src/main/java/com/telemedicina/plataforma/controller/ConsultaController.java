@@ -41,4 +41,9 @@ public class ConsultaController {
                 request.getTipoOrden(),
                 request.getEstado());
     }
+
+    @PostMapping("/clonar/{id}")
+    public Consulta clonarConsulta(@PathVariable Long id) {
+        return consultaService.clonarConsulta(id);
+    }
 }
