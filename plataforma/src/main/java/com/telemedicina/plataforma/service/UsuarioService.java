@@ -3,6 +3,8 @@ package com.telemedicina.plataforma.service;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
+import com.telemedicina.plataforma.adapter.UsuarioAdapter;
+import com.telemedicina.plataforma.adapter.UsuarioExternoAdapter;
 import com.telemedicina.plataforma.factory.*;
 import com.telemedicina.plataforma.model.*;
 import com.telemedicina.plataforma.repository.*;
@@ -39,5 +41,18 @@ public class UsuarioService {
         }
 
         throw new IllegalArgumentException("Tipo de usuario inválido");
+    }
+
+    public Usuario crearUsuarioDesdeExterno(String nombreCompleto, String email) {
+
+        UsuarioExterno externo = new UsuarioExterno();
+        externo.setNombreCompleto(nombreCompleto);
+        externo.setEmail(email);
+
+        UsuarioAdapter adapter = new UsuarioExternoAdapter(externo);
+
+        Usuario usuario = adapter.adaptar();
+
+        return pacienteRepository.save((Paciente) usuario);
     }
 }
