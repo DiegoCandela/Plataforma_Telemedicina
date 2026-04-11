@@ -18,11 +18,12 @@ public class ConsultaController {
 
     @PostMapping
     public Consulta crearConsulta(@RequestBody ConsultaRequest request) {
-
         return consultaService.crearConsulta(
                 request.getFecha(),
                 request.getPacienteId(),
-                request.getMedicoId());
+                request.getMedicoId(),
+                request.getTipo()
+        );
     }
 
     @PostMapping("/prescripcion")

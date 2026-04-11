@@ -9,77 +9,91 @@ import java.util.Objects;
 import com.telemedicina.plataforma.factory.*;
 import com.telemedicina.plataforma.model.*;
 import com.telemedicina.plataforma.repository.*;
+import com.telemedicina.plataforma.bridge.*;
 
 @Service
 @RequiredArgsConstructor
 public class ConsultaService {
 
-    private final ConsultaRepository consultaRepository;
-    private final PrescripcionRepository prescripcionRepository;
-    private final OrdenMedicaRepository ordenMedicaRepository;
-    private final PacienteRepository pacienteRepository;
-    private final MedicoRepository medicoRepository;
+        private final ConsultaRepository consultaRepository;
+        private final PrescripcionRepository prescripcionRepository;
+        private final OrdenMedicaRepository ordenMedicaRepository;
+        private final PacienteRepository pacienteRepository;
+        private final MedicoRepository medicoRepository;
 
-    public Consulta crearConsulta(LocalDateTime fecha, Long pacienteId, Long medicoId) {
+        public Consulta crearConsulta(LocalDateTime fecha, Long pacienteId, Long medicoId, String tipo) {
 
-        Objects.requireNonNull(pacienteId, "pacienteId no puede ser null");
-        Objects.requireNonNull(medicoId, "medicoId no puede ser null");
+                Objects.requireNonNull(fecha, "fecha no puede ser null");
+                Objects.requireNonNull(pacienteId, "pacienteId no puede ser null");
+                Objects.requireNonNull(medicoId, "medicoId no puede ser null");
+                Objects.requireNonNull(tipo, "tipo no puede ser null");
 
-        Paciente paciente = pacienteRepository.findById(pacienteId)
-                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+                Paciente paciente = pacienteRepository.findById(pacienteId)
+                                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
 
-        Medico medico = medicoRepository.findById(medicoId)
-                .orElseThrow(() -> new RuntimeException("Medico no encontrado"));
+                Medico medico = medicoRepository.findById(medicoId)
+                                .orElseThrow(() -> new RuntimeException("Medico no encontrado"));
 
-        AbstractMedicalFactory factory = FactoryProvider.getFactory("MEDICO");
+                AbstractMedicalFactory factory = FactoryProvider.getFactory("MEDICO");
+                Consulta consulta = factory.crearConsulta(paciente, medico);
 
-        Consulta consulta = factory.crearConsulta(paciente, medico);
+                consulta.setFecha(fecha);
 
-        consulta.setFecha(fecha);
+                TipoConsultaImplementor implementor;
 
-        return consultaRepository.save(consulta);
-    }
+                if (tipo.equalsIgnoreCase("VIRTUAL")) {
+                        implementor = new ConsultaVirtual();
+                } else {
+                        implementor = new ConsultaPresencial();
+                }
 
-    public Prescripcion crearPrescripcion(Long consultaId, String medicamento, String indicaciones) {
+                consulta.setTipoConsulta(implementor);
 
-        Objects.requireNonNull(consultaId, "consultaId no puede ser null");
+                consulta.ejecutarConsulta();
 
-        Consulta consulta = consultaRepository.findById(consultaId)
-                .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
+                return consultaRepository.save(consulta);
+        }
 
-        AbstractMedicalFactory factory = FactoryProvider.getFactory("MEDICO");
+        public Prescripcion crearPrescripcion(Long consultaId, String medicamento, String indicaciones) {
 
-        Prescripcion prescripcion = factory.crearPrescripcion(
-                consulta,
-                medicamento,
-                indicaciones);
+                Objects.requireNonNull(consultaId, "consultaId no puede ser null");
 
-        Objects.requireNonNull(prescripcion, "Error al crear la prescripción");
+                Consulta consulta = consultaRepository.findById(consultaId)
+                                .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
 
-        return prescripcionRepository.save(prescripcion);
-    }
+                AbstractMedicalFactory factory = FactoryProvider.getFactory("MEDICO");
 
-    public OrdenMedica crearOrdenMedica(String tipoOrden, String estado) {
+                Prescripcion prescripcion = factory.crearPrescripcion(
+                                consulta,
+                                medicamento,
+                                indicaciones);
 
-    AbstractMedicalFactory factory = FactoryProvider.getFactory("MEDICO");
+                Objects.requireNonNull(prescripcion, "Error al crear la prescripción");
 
-    OrdenMedica orden = factory.crearOrdenMedica(tipoOrden, estado);
+                return prescripcionRepository.save(prescripcion);
+        }
 
-    Objects.requireNonNull(orden, "Error al crear la orden médica");
+        public OrdenMedica crearOrdenMedica(String tipoOrden, String estado) {
 
-    return ordenMedicaRepository.save(orden);
-}
+                AbstractMedicalFactory factory = FactoryProvider.getFactory("MEDICO");
 
-public Consulta clonarConsulta(Long consultaId) {
+                OrdenMedica orden = factory.crearOrdenMedica(tipoOrden, estado);
 
-Consulta original = consultaRepository.findById(consultaId)
-        .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
+                Objects.requireNonNull(orden, "Error al crear la orden médica");
 
-Consulta copia = original.clone();
+                return ordenMedicaRepository.save(orden);
+        }
 
-copia.setFecha(original.getFecha().plusDays(1));
-copia.setEstado("ACTIVA");
+        public Consulta clonarConsulta(Long consultaId) {
 
-return consultaRepository.save(copia);
-}
+                Consulta original = consultaRepository.findById(consultaId)
+                                .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
+
+                Consulta copia = original.clone();
+
+                copia.setFecha(original.getFecha().plusDays(1));
+                copia.setEstado("ACTIVA");
+
+                return consultaRepository.save(copia);
+        }
 }

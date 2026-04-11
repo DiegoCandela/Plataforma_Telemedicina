@@ -9,4 +9,5 @@ public class ConsultaRequest {
     private LocalDateTime fecha;
     private Long pacienteId;
     private Long medicoId;
+    private String tipo;
 }
