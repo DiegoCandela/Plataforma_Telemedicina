@@ -6,4 +6,4 @@ public class ConsultaPresencial implements TipoConsultaImplementor {
     public void ejecutarTipoConsulta() {
         System.out.println("Ejecutando consulta presencial");
     }
-}
+}   

@@ -10,6 +10,10 @@ import com.telemedicina.plataforma.factory.*;
 import com.telemedicina.plataforma.model.*;
 import com.telemedicina.plataforma.repository.*;
 import com.telemedicina.plataforma.bridge.*;
+import com.telemedicina.plataforma.decorator.ConsultaBase;
+import com.telemedicina.plataforma.decorator.ConsultaComponent;
+import com.telemedicina.plataforma.decorator.HistorialDecorator;
+import com.telemedicina.plataforma.decorator.NotificacionDecorator;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +54,13 @@ public class ConsultaService {
                 consulta.setTipoConsulta(implementor);
 
                 consulta.ejecutarConsulta();
+
+                ConsultaComponent componente = new ConsultaBase(consulta);
+
+                componente = new NotificacionDecorator(componente);
+                componente = new HistorialDecorator(componente);
+
+                componente.ejecutar();
 
                 return consultaRepository.save(consulta);
         }
