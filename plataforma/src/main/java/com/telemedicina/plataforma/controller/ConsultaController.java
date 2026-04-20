@@ -7,6 +7,7 @@ import com.telemedicina.plataforma.dto.*;
 import com.telemedicina.plataforma.model.Consulta;
 import com.telemedicina.plataforma.model.OrdenMedica;
 import com.telemedicina.plataforma.model.Prescripcion;
+import com.telemedicina.plataforma.service.AtencionMedicaFacade;
 import com.telemedicina.plataforma.service.ConsultaService;
 
 @RestController
@@ -15,6 +16,21 @@ import com.telemedicina.plataforma.service.ConsultaService;
 public class ConsultaController {
 
     private final ConsultaService consultaService;
+    private final AtencionMedicaFacade atencionMedicaFacade;
+
+    @PostMapping("/atencion-completa")
+    public Consulta atencionCompleta(@RequestBody AtencionRequest request) {
+
+        return atencionMedicaFacade.procesarAtencionCompleta(
+                request.getFecha(),
+                request.getPacienteId(),
+                request.getMedicoId(),
+                request.getTipoConsulta(),
+                request.getMedicamento(),
+                request.getIndicaciones(),
+                request.getTipoOrden(),
+                request.getEstadoOrden());
+    }
 
     @PostMapping
     public Consulta crearConsulta(@RequestBody ConsultaRequest request) {
