@@ -22,8 +22,7 @@ public class ConsultaController {
                 request.getFecha(),
                 request.getPacienteId(),
                 request.getMedicoId(),
-                request.getTipo()
-        );
+                request.getTipo());
     }
 
     @PostMapping("/prescripcion")
@@ -46,5 +45,11 @@ public class ConsultaController {
     @PostMapping("/clonar/{id}")
     public Consulta clonarConsulta(@PathVariable Long id) {
         return consultaService.clonarConsulta(id);
+    }
+
+    @GetMapping("/{id}/plan")
+    public String mostrarPlan(@PathVariable Long id) {
+        consultaService.mostrarPlanAtencion(id);
+        return "Plan mostrado en consola";
     }
 }

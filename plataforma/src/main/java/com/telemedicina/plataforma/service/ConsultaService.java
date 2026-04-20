@@ -10,6 +10,9 @@ import com.telemedicina.plataforma.factory.*;
 import com.telemedicina.plataforma.model.*;
 import com.telemedicina.plataforma.repository.*;
 import com.telemedicina.plataforma.bridge.*;
+import com.telemedicina.plataforma.composite.OrdenMedicaLeaf;
+import com.telemedicina.plataforma.composite.PlanCompuesto;
+import com.telemedicina.plataforma.composite.PrescripcionLeaf;
 import com.telemedicina.plataforma.decorator.ConsultaBase;
 import com.telemedicina.plataforma.decorator.ConsultaComponent;
 import com.telemedicina.plataforma.decorator.HistorialDecorator;
@@ -24,6 +27,7 @@ public class ConsultaService {
         private final OrdenMedicaRepository ordenMedicaRepository;
         private final PacienteRepository pacienteRepository;
         private final MedicoRepository medicoRepository;
+        private final TipoConsultaProvider tipoConsultaProvider;
 
         public Consulta crearConsulta(LocalDateTime fecha, Long pacienteId, Long medicoId, String tipo) {
 
@@ -43,13 +47,7 @@ public class ConsultaService {
 
                 consulta.setFecha(fecha);
 
-                TipoConsultaImplementor implementor;
-
-                if (tipo.equalsIgnoreCase("VIRTUAL")) {
-                        implementor = new ConsultaVirtual();
-                } else {
-                        implementor = new ConsultaPresencial();
-                }
+                TipoConsultaImplementor implementor = tipoConsultaProvider.obtener(tipo);
 
                 consulta.setTipoConsulta(implementor);
 
@@ -106,5 +104,24 @@ public class ConsultaService {
                 copia.setEstado("ACTIVA");
 
                 return consultaRepository.save(copia);
+        }
+
+        public void mostrarPlanAtencion(Long consultaId) {
+
+                Consulta consulta = consultaRepository.findById(consultaId)
+                                .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
+
+                PlanCompuesto planPrincipal = new PlanCompuesto("Plan General");
+
+                // Subplan (esto es lo que lo hace REALMENTE Composite)
+                PlanCompuesto subPlan = new PlanCompuesto("Tratamiento inicial");
+
+                prescripcionRepository.findAll().forEach(p -> subPlan.agregar(new PrescripcionLeaf(p)));
+
+                ordenMedicaRepository.findAll().forEach(o -> subPlan.agregar(new OrdenMedicaLeaf(o)));
+
+                planPrincipal.agregar(subPlan);
+
+                planPrincipal.mostrar();
         }
 }
