@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import com.telemedicina.plataforma.factory.*;
 import com.telemedicina.plataforma.model.*;
+import com.telemedicina.plataforma.proxy.ConsultaServiceProxyInterface;
 import com.telemedicina.plataforma.repository.*;
 import com.telemedicina.plataforma.bridge.*;
 import com.telemedicina.plataforma.composite.OrdenMedicaLeaf;
@@ -22,7 +23,7 @@ import com.telemedicina.plataforma.flyweight.TipoConsultaFlyweight;
 
 @Service
 @RequiredArgsConstructor
-public class ConsultaService {
+public class ConsultaService implements ConsultaServiceProxyInterface{
 
         private final ConsultaRepository consultaRepository;
         private final PrescripcionRepository prescripcionRepository;

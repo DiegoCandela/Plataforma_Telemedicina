@@ -7,6 +7,7 @@ import com.telemedicina.plataforma.dto.*;
 import com.telemedicina.plataforma.model.Consulta;
 import com.telemedicina.plataforma.model.OrdenMedica;
 import com.telemedicina.plataforma.model.Prescripcion;
+import com.telemedicina.plataforma.proxy.ConsultaServiceProxy;
 import com.telemedicina.plataforma.service.AtencionMedicaFacade;
 import com.telemedicina.plataforma.service.ConsultaService;
 
@@ -15,6 +16,7 @@ import com.telemedicina.plataforma.service.ConsultaService;
 @RequiredArgsConstructor
 public class ConsultaController {
 
+    private final ConsultaServiceProxy consultaServiceProxy;
     private final ConsultaService consultaService;
     private final AtencionMedicaFacade atencionMedicaFacade;
 
@@ -34,7 +36,7 @@ public class ConsultaController {
 
     @PostMapping
     public Consulta crearConsulta(@RequestBody ConsultaRequest request) {
-        return consultaService.crearConsulta(
+        return consultaServiceProxy.crearConsulta(
                 request.getFecha(),
                 request.getPacienteId(),
                 request.getMedicoId(),
