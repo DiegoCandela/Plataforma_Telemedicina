@@ -17,6 +17,8 @@ import com.telemedicina.plataforma.decorator.ConsultaBase;
 import com.telemedicina.plataforma.decorator.ConsultaComponent;
 import com.telemedicina.plataforma.decorator.HistorialDecorator;
 import com.telemedicina.plataforma.decorator.NotificacionDecorator;
+import com.telemedicina.plataforma.flyweight.TipoConsultaFactory;
+import com.telemedicina.plataforma.flyweight.TipoConsultaFlyweight;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +49,11 @@ public class ConsultaService {
 
                 consulta.setFecha(fecha);
 
-                TipoConsultaImplementor implementor = tipoConsultaProvider.obtener(tipo);
+                // Flyweight (reutiliza el tipo)
+                TipoConsultaFlyweight tipoFlyweight = TipoConsultaFactory.getTipo(tipo);
+
+                // Bridge (comportamiento)
+                TipoConsultaImplementor implementor = tipoConsultaProvider.obtener(tipoFlyweight.getTipo());
 
                 consulta.setTipoConsulta(implementor);
 
