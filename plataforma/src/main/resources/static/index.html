@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Plataforma de Telemedicina</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <!-- Fuente moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- 🔵 HEADER -->
+    <header class="header">
+        🏥 Plataforma de Telemedicina
+    </header>
+
+    <!-- 🔵 CONTENIDO PRINCIPAL -->
+    <div class="container">
+
+        <!-- 🔹 BOTONES DE NAVEGACIÓN -->
+        <div class="card">
+            <h2>📌 Módulos</h2>
+
+            <button onclick="cargarVista('consulta')">📋 Crear Consulta</button>
+            <button onclick="cargarVista('atencion')">🧾 Atención Completa</button>
+        </div>
+
+        <!-- 🔹 AQUÍ SE RENDERIZAN LAS VISTAS -->
+        <div id="app"></div>
+
+        <!-- 🔹 HISTORIAL (Decorator) -->
+        <div id="log">
+            <h3>📜 Historial</h3>
+        </div>
+
+    </div>
+
+    <!-- 🔵 TOAST NOTIFICATION -->
+    <div id="toast"></div>
+
+    <!-- 🔵 SCRIPT PRINCIPAL -->
+    <script type="module">
+
+        import { renderConsultaView } from "./js/views/consultaView.js";
+        import { renderAtencionView } from "./js/views/atencionView.js";
+
+        // Función global para navegación
+        window.cargarVista = function(vista) {
+
+            const container = document.getElementById("app");
+            container.innerHTML = "";
+
+            if (vista === "consulta") {
+                renderConsultaView(container);
+            }
+
+            if (vista === "atencion") {
+                renderAtencionView(container);
+            }
+        };
+
+    </script>
+
+</body>
+</html>
+```
